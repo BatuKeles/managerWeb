@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: sportsclub_web
+    restart: unless-stopped
+    ports:
+      - "3002:3000"
+    environment:
+      DATABASE_URL: postgresql://sportsclub:sportsclub123@postgres:5432/sportsclub?schema=public
+      JWT_SECRET: ${JWT_SECRET:-sportsclub-prod-jwt-secret-2024-gizli}
+      NEXT_PUBLIC_SITE_URL: http://164.92.238.241:3002
+      NODE_ENV: production
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - uploads_data:/app/public/uploads
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: sportsclub_postgres
+    restart: unless-stopped
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_DB: sportsclub
+      POSTGRES_USER: sportsclub
+      POSTGRES_PASSWORD: sportsclub123
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sportsclub -d sportsclub"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
+    name: sportsclub_pgdata
+  uploads_data:
+    name: sportsclub_uploads

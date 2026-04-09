@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ContentBlock {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  type      String   // 'text' | 'image' | 'html'
+  value     String?
+  role      String?  // null=global | 'veli' | 'kulup' | 'ogrenci' | 'antrenor'
+  section   String?  // 'hero' | 'gallery' | 'about' | 'contact'
+  updatedAt DateTime @updatedAt
+}
+
+model Package {
+  id        Int      @id @default(autoincrement())
+  type      String   // 'aylik' | 'senlik'
+  name      String
+  price     Decimal?
+  features  Json     // string[]
+  isActive  Boolean  @default(true)
+  sortOrder Int      @default(0)
+}
+
+model AdminUser {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model ChatSession {
+  id          String        @id @default(uuid())
+  visitorName String?
+  status      String        @default("waiting") // waiting | active | closed
+  createdAt   DateTime      @default(now())
+  messages    ChatMessage[]
+}
+
+model ChatMessage {
+  id         Int         @id @default(autoincrement())
+  sessionId  String
+  session    ChatSession @relation(fields: [sessionId], references: [id])
+  senderType String      // 'visitor' | 'admin'
+  message    String
+  createdAt  DateTime    @default(now())
+  readAt     DateTime?
+}
