@@ -2,6 +2,7 @@
 
 import Navbar from '@/components/sections/Navbar'
 import ScrollStorySection from '@/components/sections/ScrollStorySection'
+import IpadFlipSection from '@/components/IpadFlip/IpadFlipSection'
 import PricingSection from '@/components/sections/PricingSection'
 import AppStoreSection from '@/components/sections/AppStoreSection'
 import AboutSection from '@/components/sections/AboutSection'
@@ -27,6 +28,9 @@ export default function LandingClient({ contentBlocks, packages }: LandingClient
       <main>
         {/* Tablet scroll hikâyesi — hero + roller (5 slide) */}
         <ScrollStorySection />
+
+        {/* 3D iPad flip showcase */}
+        <IpadFlipSection />
 
         {/* Paketler */}
         <PricingSection packages={packages} />
