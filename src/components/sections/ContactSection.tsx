@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Mail, Phone, MapPin } from 'lucide-react'
+import MascotVideo from '@/components/Mascot/MascotVideo'
 
 interface ContactSectionProps {
   email?: string
@@ -10,7 +11,7 @@ interface ContactSectionProps {
 }
 
 export default function ContactSection({
-  email = 'info@sporkulubu.com',
+  email = 'info@kulupbul.com',
   phone = '+90 555 000 0000',
   address = 'İstanbul, Türkiye',
 }: ContactSectionProps) {
@@ -21,8 +22,14 @@ export default function ContactSection({
   ]
 
   return (
-    <section id="contact" className="py-32 bg-t-black">
-      <div className="max-w-7xl mx-auto px-6 md:px-8">
+    <section id="contact" className="py-32 relative overflow-hidden" style={{
+      background: 'linear-gradient(180deg, #fbfaf7 0%, #f0f4ff 100%)',
+    }}>
+      {/* Glow accent */}
+      <div style={{ position: 'absolute', top: '-10%', right: '20%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 60%)', filter: 'blur(80px)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', bottom: '10%', left: '10%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(16,185,129,0.12) 0%, transparent 60%)', filter: 'blur(70px)', pointerEvents: 'none' }} />
+
+      <div className="max-w-7xl mx-auto px-6 md:px-8 relative" style={{ zIndex: 1 }}>
         <div className="grid lg:grid-cols-2 gap-20 items-start">
 
           {/* Left */}
@@ -53,7 +60,7 @@ export default function ContactSection({
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true, amount: 0.5 }}
                     transition={{ duration: 0.5, delay: 0.3 + i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-                    className="flex items-center gap-5 bg-t-dark rounded-xl px-6 py-5 hover:bg-t-surface transition-all group border border-white/5"
+                    className="flex items-center gap-5 bg-white rounded-xl px-6 py-5 hover:shadow-md transition-all group border border-slate-200 shadow-[0_2px_8px_rgba(15,23,42,0.04)]"
                   >
                     <div className="w-11 h-11 bg-t-accent/10 rounded-xl flex items-center justify-center flex-shrink-0">
                       <Icon className="w-5 h-5 text-t-accent" />
@@ -78,7 +85,20 @@ export default function ContactSection({
             transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="pt-4"
           >
-            <div className="bg-t-dark rounded-2xl p-10 relative overflow-hidden border border-white/[0.06]">
+            <div className="flex justify-center mb-6" style={{ animation: 'mascot-float 3s ease-in-out infinite' }}>
+              <MascotVideo
+                src="/videos/mascot/jumps_so_happy.webm"
+                width={258}
+                height={258}
+              />
+            </div>
+            <style>{`
+              @keyframes mascot-float {
+                0%, 100% { transform: translateY(0); }
+                50% { transform: translateY(-8px); }
+              }
+            `}</style>
+            <div className="bg-white rounded-2xl p-10 relative overflow-hidden border border-slate-200 shadow-[0_8px_32px_rgba(15,23,42,0.06)]">
               <div className="absolute inset-0 bg-gradient-to-br from-t-accent/8 via-transparent to-transparent pointer-events-none" />
               <motion.span
                 className="text-t-accent font-body font-semibold uppercase tracking-[0.25em] text-[11px] block mb-5 relative z-10"

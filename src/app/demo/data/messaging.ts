@@ -1,5 +1,5 @@
 // ============================================================
-// AcquaManager Demo — Messaging Data
+// Kulüp Bul Demo — Messaging Data
 // ============================================================
 import type { MessageTemplate } from '../types'
 

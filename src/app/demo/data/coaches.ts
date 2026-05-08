@@ -1,5 +1,5 @@
 // ============================================================
-// AcquaManager Demo — Coaches Data
+// Kulüp Bul Demo — Coaches Data
 // ============================================================
 import type { ClubCoach, CoachInvitation } from '../types'
 import { clubCoachAhmet, clubCoachAyse, clubCoachMehmet } from './sessions'

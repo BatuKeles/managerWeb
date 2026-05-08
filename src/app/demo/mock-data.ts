@@ -1,5 +1,5 @@
 // ============================================================
-// AcquaManager Demo — Mock Data (backward compatibility)
+// Kulüp Bul Demo — Mock Data (backward compatibility)
 // Existing pages import from here. They will be migrated to
 // use the Zustand store directly. Do not add new exports here.
 // ============================================================

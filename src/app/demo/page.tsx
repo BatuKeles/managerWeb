@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Droplets } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import MascotVideo from '@/components/Mascot/MascotVideo'
 
 const DEMO_ROUTES = [
   '/demo/dashboard',
@@ -94,12 +94,16 @@ export default function DemoPage() {
         ))}
       </div>
 
-      {/* Logo */}
+      {/* Mascot */}
       <motion.div
-        animate={{ scale: [1, 1.1, 1] }}
+        animate={{ scale: [1, 1.05, 1] }}
         transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
       >
-        <Droplets className="h-16 w-16 text-teal-400" />
+        <MascotVideo
+          src="/videos/mascot/bench.webm"
+          width={215}
+          height={215}
+        />
       </motion.div>
 
       {/* Title */}

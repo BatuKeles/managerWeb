@@ -29,6 +29,7 @@
 
 @layer base {
   * { @apply border-border; }
+  html { background: #fbfaf7; }
   body { @apply bg-t-black text-t-white; }
 }
 
@@ -46,14 +47,9 @@ h1, h2, h3, h4, h5, h6, .font-headline {
   font-family: var(--font-space), sans-serif;
 }
 
-/* Kinetic gradient (still used in pricing) */
-.kinetic-gradient {
-  background: linear-gradient(135deg, #001e40 0%, #003366 100%);
-}
-
-/* Subtle dot grid */
+/* Subtle dot grid (light theme) */
 .dot-grid {
-  background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(15,23,42,0.05) 1px, transparent 1px);
   background-size: 32px 32px;
 }
 
@@ -69,8 +65,8 @@ input, textarea, [contenteditable="true"] {
   user-select: text;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar { width: 4px; }
+/* Custom scrollbar — light */
+::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #333; border-radius: 999px; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
 ::-webkit-scrollbar-thumb:hover { background: #6366f1; }

@@ -1,5 +1,5 @@
 // ============================================================
-// AcquaManager Demo — Packages Data
+// Kulüp Bul Demo — Packages Data
 // ============================================================
 import type { ClubPackage } from '../types'
 

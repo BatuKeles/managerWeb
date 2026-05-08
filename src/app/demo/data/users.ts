@@ -1,5 +1,5 @@
 // ============================================================
-// AcquaManager Demo — User & Child Data (shared, no deps on other data files)
+// Kulüp Bul Demo — User & Child Data (shared, no deps on other data files)
 // ============================================================
 import type { User, Child } from '../types'
 

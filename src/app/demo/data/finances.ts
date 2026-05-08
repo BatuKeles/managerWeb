@@ -1,5 +1,5 @@
 // ============================================================
-// AcquaManager Demo — Finances Data
+// Kulüp Bul Demo — Finances Data
 // ============================================================
 import type { StudentPayment, ClubExpense } from '../types'
 import {

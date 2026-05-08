@@ -1,5 +1,6 @@
 import { Server as SocketIOServer } from 'socket.io'
 import type { Server as HTTPServer } from 'http'
+import { prisma } from './db'
 
 let io: SocketIOServer | null = null
 
@@ -16,65 +17,101 @@ export function initSocket(httpServer: HTTPServer): SocketIOServer {
   })
 
   io.on('connection', (socket) => {
-    console.log('[Socket] Client connected:', socket.id)
-
     // Join a chat session room
     socket.on('join:session', (sessionId: string) => {
-      socket.join(`session:${sessionId}`)
-      console.log(`[Socket] ${socket.id} joined session:${sessionId}`)
+      if (typeof sessionId === 'string' && sessionId.length < 100) {
+        socket.join(`session:${sessionId}`)
+      }
     })
 
     // Admin joins to monitor all sessions
     socket.on('join:admin', () => {
       socket.join('admin')
-      console.log(`[Socket] Admin joined: ${socket.id}`)
     })
 
-    // Visitor sends a message
+    // Visitor sends a message — persist + broadcast
     socket.on('visitor:message', async (data: { sessionId: string; message: string }) => {
-      const { sessionId, message } = data
+      const sessionId = (data?.sessionId || '').toString().trim()
+      const message = (data?.message || '').toString().trim().slice(0, 2000)
+      if (!sessionId || !message) return
 
-      // Broadcast to the session room (admin sees it)
-      io?.to(`session:${sessionId}`).emit('message:new', {
-        sessionId,
-        senderType: 'visitor',
-        message,
-        createdAt: new Date().toISOString(),
-      })
+      try {
+        const session = await prisma.chatSession.findUnique({ where: { id: sessionId } })
+        if (!session || session.status === 'closed') return
 
-      // Notify all admins of new/updated session
-      io?.to('admin').emit('session:update', { sessionId, status: 'waiting' })
+        const saved = await prisma.chatMessage.create({
+          data: { sessionId, senderType: 'visitor', message },
+        })
+
+        if (session.status === 'waiting') {
+          // first visitor message keeps it waiting; broadcast to admins
+          io?.to('admin').emit('session:update', { sessionId, status: 'waiting' })
+        }
+
+        io?.to(`session:${sessionId}`).emit('message:new', {
+          id: saved.id,
+          sessionId,
+          senderType: 'visitor',
+          message: saved.message,
+          createdAt: saved.createdAt.toISOString(),
+        })
+        io?.to('admin').emit('admin:newMessage', {
+          sessionId,
+          senderType: 'visitor',
+          message: saved.message,
+        })
+      } catch (e) {
+        console.error('[Socket] visitor:message persist failed', e)
+      }
     })
 
-    // Admin sends a message
+    // Admin sends a message — persist + broadcast
     socket.on('admin:message', async (data: { sessionId: string; message: string }) => {
-      const { sessionId, message } = data
+      const sessionId = (data?.sessionId || '').toString().trim()
+      const message = (data?.message || '').toString().trim().slice(0, 2000)
+      if (!sessionId || !message) return
 
-      // Broadcast to the session room (visitor sees it)
-      io?.to(`session:${sessionId}`).emit('message:new', {
-        sessionId,
-        senderType: 'admin',
-        message,
-        createdAt: new Date().toISOString(),
-      })
+      try {
+        const session = await prisma.chatSession.findUnique({ where: { id: sessionId } })
+        if (!session) return
 
-      // Update session status to active
-      io?.to('admin').emit('session:update', { sessionId, status: 'active' })
-    })
+        const saved = await prisma.chatMessage.create({
+          data: { sessionId, senderType: 'admin', message },
+        })
 
-    // New session notification (called from API after creating session)
-    socket.on('session:new', (data: { sessionId: string; visitorName: string }) => {
-      io?.to('admin').emit('session:new', data)
+        if (session.status !== 'active') {
+          await prisma.chatSession.update({
+            where: { id: sessionId },
+            data: { status: 'active' },
+          })
+          io?.to('admin').emit('session:update', { sessionId, status: 'active' })
+        }
+
+        io?.to(`session:${sessionId}`).emit('message:new', {
+          id: saved.id,
+          sessionId,
+          senderType: 'admin',
+          message: saved.message,
+          createdAt: saved.createdAt.toISOString(),
+        })
+      } catch (e) {
+        console.error('[Socket] admin:message persist failed', e)
+      }
     })
 
     // Admin closes session
-    socket.on('session:close', (sessionId: string) => {
-      io?.to(`session:${sessionId}`).emit('session:closed')
-      io?.to('admin').emit('session:update', { sessionId, status: 'closed' })
-    })
-
-    socket.on('disconnect', () => {
-      console.log('[Socket] Client disconnected:', socket.id)
+    socket.on('session:close', async (sessionId: string) => {
+      if (typeof sessionId !== 'string') return
+      try {
+        await prisma.chatSession.update({
+          where: { id: sessionId },
+          data: { status: 'closed' },
+        })
+        io?.to(`session:${sessionId}`).emit('session:closed')
+        io?.to('admin').emit('session:update', { sessionId, status: 'closed' })
+      } catch (e) {
+        console.error('[Socket] session:close failed', e)
+      }
     })
   })
 

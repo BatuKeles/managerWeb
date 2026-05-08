@@ -31,9 +31,22 @@ async function main() {
     { key: 'about_description', type: 'html', value: '<p>Spor kulüplerini dijital dönüşüme taşıyan yenilikçi platformumuz, sporcuların, ailelerin ve antrenörlerin iletişimini güçlendiriyor.</p>', section: 'about' },
 
     // Contact Section
-    { key: 'contact_email', type: 'text', value: 'info@sporkulubu.com', section: 'contact' },
+    { key: 'contact_email', type: 'text', value: 'info@kulupbul.com', section: 'contact' },
     { key: 'contact_phone', type: 'text', value: '+90 555 000 0000', section: 'contact' },
     { key: 'contact_address', type: 'text', value: 'İstanbul, Türkiye', section: 'contact' },
+    { key: 'contact_website', type: 'text', value: 'kulupbul.com', section: 'contact' },
+    { key: 'contact_hours', type: 'text', value: '7/24 hizmet', section: 'contact' },
+
+    // About stats
+    { key: 'about_year_founded', type: 'text', value: '2024', section: 'about' },
+    { key: 'about_stat_clubs', type: 'text', value: '500+', section: 'about' },
+    { key: 'about_stat_cities', type: 'text', value: '15+', section: 'about' },
+
+    // Hero stats
+    { key: 'hero_stat_students', type: 'text', value: '12.400+', section: 'hero' },
+    { key: 'hero_stat_clubs', type: 'text', value: '320+', section: 'hero' },
+    { key: 'hero_stat_parents', type: 'text', value: '8.900+', section: 'hero' },
+    { key: 'hero_stat_coaches', type: 'text', value: '1.100+', section: 'hero' },
 
     // Role-specific content - Veli
     { key: 'veli_title', type: 'text', value: 'Çocuğunuzun Gelişimini Takip Edin', role: 'veli', section: 'role' },

@@ -5,6 +5,7 @@ import * as THREE from 'three'
 import { Canvas } from '@react-three/fiber'
 import IpadModel from './IpadModel'
 import { IMAGES } from './screens'
+import MascotVideo from '@/components/Mascot/MascotVideo'
 
 export default function IpadFlipSection() {
   const sectionRef = useRef<HTMLElement | null>(null)
@@ -66,7 +67,7 @@ export default function IpadFlipSection() {
           }}
           className="ipadflip-canvas"
         >
-          <color attach="background" args={['#000000']} />
+          <color attach="background" args={['#e0d4f5']} />
           <ambientLight intensity={0.9} />
           <directionalLight position={[3, 4, 5]} intensity={1.2} />
           <directionalLight position={[-4, -2, -3]} intensity={0.6} />
@@ -76,35 +77,95 @@ export default function IpadFlipSection() {
         {/* Text panel overlay */}
         <div className="ipadflip-overlay">
           <div className="ipadflip-panel-wrap">
-            <div key={activeIndex} className="ipadflip-panel">
-              <span className="ipadflip-eyebrow">
-                {current.eyebrow}
-              </span>
-              <h2 className="ipadflip-title font-headline">
-                {current.title}
-              </h2>
-              <p className="ipadflip-desc">
-                {current.description}
-              </p>
-              <div className="ipadflip-chips">
-                {current.features.map((f) => (
-                  <span key={f} className="ipadflip-chip">
-                    {f}
-                  </span>
-                ))}
+            <div className="ipadflip-panel-inner">
+              <div key={activeIndex} className="ipadflip-panel">
+                <span className="ipadflip-eyebrow">
+                  {current.eyebrow}
+                </span>
+                <h2 className="ipadflip-title font-headline">
+                  {current.title}
+                </h2>
+                <p className="ipadflip-desc">
+                  {current.description}
+                </p>
+                <div className="ipadflip-chips">
+                  {current.features.map((f) => (
+                    <span key={f} className="ipadflip-chip">
+                      {f}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              {/* Mascot pointing at text — desktop only */}
+              <div className="hidden md:block ipadflip-mascot" style={{ animation: 'mascot-float 3s ease-in-out infinite', flexShrink: 0, marginLeft: -20 }}>
+                <MascotVideo
+                  src="/videos/mascot/bench.webm"
+                  width={172}
+                  height={172}
+                />
               </div>
             </div>
           </div>
         </div>
       </div>
 
+      {/* Scroll direction arrows — positioned near the iPad, hidden on mobile */}
+      <div className="ipadflip-arrows hidden md:block" style={{
+        position: 'sticky',
+        top: 0,
+        height: 0,
+        width: '100%',
+        pointerEvents: 'none',
+        zIndex: 10,
+      }}>
+        {/* Left arrow */}
+        <div
+          onClick={() => window.scrollBy({ top: -window.innerHeight, behavior: 'smooth' })}
+          style={{
+            position: 'absolute',
+            right: '48%',
+            top: '50vh',
+            transform: 'translateY(-50%)',
+            opacity: activeIndex > 0 ? 0.6 : 0.15,
+            transition: 'opacity 0.3s ease',
+            pointerEvents: 'auto',
+            cursor: 'pointer',
+          }}
+        >
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        </div>
+        {/* Right arrow */}
+        <div
+          onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })}
+          style={{
+            position: 'absolute',
+            right: '18%',
+            top: '50vh',
+            transform: 'translateY(-50%)',
+            opacity: activeIndex < IMAGES.length - 1 ? 0.6 : 0.15,
+            transition: 'opacity 0.3s ease',
+            pointerEvents: 'auto',
+            cursor: 'pointer',
+          }}
+        >
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </div>
+      </div>
       <span className="sr-only">iPad showcase — scroll to reveal features</span>
 
       <style>{`
         .ipadflip-section {
           position: relative;
           height: 700vh;
-          background: #000;
+          background:
+            radial-gradient(ellipse 80% 50% at 50% 0%, rgba(139,92,246,0.30) 0%, transparent 60%),
+            radial-gradient(ellipse 60% 40% at 100% 100%, rgba(249,115,22,0.20) 0%, transparent 55%),
+            radial-gradient(ellipse 60% 40% at 0% 100%, rgba(16,185,129,0.18) 0%, transparent 55%),
+            linear-gradient(180deg, #f5f1ff 0%, #ede4ff 50%, #e0d4f5 100%);
         }
         .ipadflip-sticky {
           position: -webkit-sticky;
@@ -134,8 +195,17 @@ export default function IpadFlipSection() {
           padding: clamp(40px, 6vw, 80px);
           box-sizing: border-box;
         }
+        .ipadflip-panel-inner {
+          display: flex;
+          align-items: center;
+          gap: 24px;
+        }
+        @keyframes mascot-float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-8px); }
+        }
         .ipadflip-eyebrow {
-          color: #818cf8;
+          color: #6366f1;
           font-size: 11px;
           letter-spacing: 0.24em;
           font-weight: 700;
@@ -148,11 +218,11 @@ export default function IpadFlipSection() {
           font-weight: 800;
           line-height: 1.1;
           letter-spacing: -0.03em;
-          color: #f0f0ff;
+          color: #1e1b4b;
           margin-bottom: 20px;
         }
         .ipadflip-desc {
-          color: #9ca3af;
+          color: #475569;
           font-size: 16px;
           line-height: 1.7;
           max-width: 440px;
@@ -165,14 +235,15 @@ export default function IpadFlipSection() {
         }
         .ipadflip-chip {
           display: inline-flex;
-          background: rgba(99,102,241,0.12);
-          color: #818cf8;
+          background: rgba(99,102,241,0.10);
+          color: #4f46e5;
           font-size: 10px;
           letter-spacing: 0.18em;
           padding: 6px 14px;
           border-radius: 999px;
           font-weight: 600;
           text-transform: uppercase;
+          border: 1px solid rgba(99,102,241,0.2);
         }
         .ipadflip-panel {
           animation: ipadflip-in 520ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
@@ -202,7 +273,7 @@ export default function IpadFlipSection() {
             width: 100% !important;
             height: auto !important;
             padding: 20px 24px 32px !important;
-            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 80%, transparent 100%);
+            background: linear-gradient(to top, rgba(245,241,255,0.98) 0%, rgba(245,241,255,0.85) 70%, transparent 100%);
             align-items: flex-start !important;
           }
           .ipadflip-title {

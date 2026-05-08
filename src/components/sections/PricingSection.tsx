@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import MascotVideo from '@/components/Mascot/MascotVideo'
 import type { Package } from '@/types'
 
 interface PricingSectionProps {
@@ -27,6 +28,11 @@ export default function PricingSection({ packages = [] }: PricingSectionProps) {
   const antrenorPkg = activePackages[0] || null
   const kulupPkg = activePackages[1] || null
 
+  const scrollToContact = (e: React.MouseEvent) => {
+    e.preventDefault()
+    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   const cards = [
     {
       title: 'Veli / Sporcu',
@@ -37,6 +43,8 @@ export default function PricingSection({ packages = [] }: PricingSectionProps) {
       note: 'Kredi kartı gerekmez.',
       features: ['Gerçek zamanlı ders takibi', 'Performans istatistikleri', 'Dijital sporcu profili'],
       btn: 'Eğitime Başla',
+      href: '/demo',
+      onClick: undefined as ((e: React.MouseEvent) => void) | undefined,
       delay: 0,
     },
     {
@@ -57,7 +65,9 @@ export default function PricingSection({ packages = [] }: PricingSectionProps) {
       ),
       note: null,
       features: antrenorPkg ? antrenorPkg.features as string[] : ['Otomatik planlama motoru', 'Ödeme ve gelir paneli', 'Sporcu notları', '50 aktif sporcu'],
-      btn: 'Kariyeri Başlat',
+      btn: 'Kariyere Başla',
+      href: '#contact',
+      onClick: scrollToContact,
       delay: 0.1,
     },
     {
@@ -79,13 +89,21 @@ export default function PricingSection({ packages = [] }: PricingSectionProps) {
       note: null,
       features: kulupPkg ? kulupPkg.features as string[] : ['Sınırsız sporcu kaydı', 'Çok antrenörlü portal', 'Etkinlik & turnuva', 'Özel marka entegrasyonu'],
       btn: 'Kulübü Ölçekle',
+      href: '#contact',
+      onClick: scrollToContact,
       delay: 0.2,
     },
   ]
 
   return (
-    <section id="pricing" className="bg-t-black">
-      <div className="max-w-7xl mx-auto px-6 md:px-8 py-32">
+    <section id="pricing" className="relative" style={{
+      background: 'linear-gradient(180deg, #fbfaf7 0%, #fefcf9 50%, #fbfaf7 100%)',
+      overflow: 'hidden',
+    }}>
+      {/* Renkli orb'lar */}
+      <div style={{ position: 'absolute', top: '15%', left: '-10%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 60%)', filter: 'blur(80px)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', bottom: '10%', right: '-10%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(249,115,22,0.12) 0%, transparent 60%)', filter: 'blur(80px)', pointerEvents: 'none' }} />
+      <div className="max-w-7xl mx-auto px-6 md:px-8 py-32 relative" style={{ zIndex: 1 }}>
 
         {/* Header */}
         <motion.div
@@ -99,13 +117,26 @@ export default function PricingSection({ packages = [] }: PricingSectionProps) {
             Üyelik
           </span>
           <div className="flex flex-col md:flex-row gap-12 items-end">
-            <div className="flex-1">
+            <div className="flex-1 flex items-center gap-6">
               <h2
                 className="font-headline font-semibold text-t-white tracking-tight"
                 style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', lineHeight: 1.1 }}
               >
                 Platforma Uygun<br />Paketi Seçin
               </h2>
+              <div className="hidden md:block flex-shrink-0" style={{ animation: 'mascot-float 3s ease-in-out infinite' }}>
+                <MascotVideo
+                  src="/videos/mascot/thumbs_up.webm"
+                  width={215}
+                  height={215}
+                />
+              </div>
+              <style>{`
+                @keyframes mascot-float {
+                  0%, 100% { transform: translateY(0); }
+                  50% { transform: translateY(-8px); }
+                }
+              `}</style>
             </div>
             <p className="text-t-gray text-base leading-relaxed max-w-md pb-2">
               Momentumunuza uygun seviyeyi seçin. Amatörden profesyonele, dijital altyapıyı sunuyoruz.
@@ -122,11 +153,17 @@ export default function PricingSection({ packages = [] }: PricingSectionProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.6, delay: card.delay }}
-              className={`flex flex-col rounded-2xl p-8 border transition-all ${
+              className={`flex flex-col rounded-2xl p-8 border transition-all relative ${
                 card.featured
-                  ? 'bg-t-surface border-t-accent/30'
-                  : 'bg-t-dark border-white/[0.06]'
+                  ? 'bg-white border-t-accent/40 shadow-[0_20px_60px_rgba(99,102,241,0.25)]'
+                  : 'bg-white border-slate-200 shadow-[0_8px_24px_rgba(15,23,42,0.06)] hover:shadow-[0_12px_32px_rgba(15,23,42,0.10)]'
               }`}
+              style={card.featured ? {
+                backgroundImage: 'linear-gradient(white, white), linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #f97316 100%)',
+                backgroundOrigin: 'border-box',
+                backgroundClip: 'padding-box, border-box',
+                border: '2px solid transparent',
+              } : undefined}
             >
               {/* Üst alan */}
               <div className="flex justify-between items-start mb-8">
@@ -137,7 +174,7 @@ export default function PricingSection({ packages = [] }: PricingSectionProps) {
                 <span className={`text-[10px] font-body font-semibold tracking-[0.12em] px-3 py-1.5 rounded-full uppercase ${
                   card.featured
                     ? 'bg-t-accent/15 text-t-accent'
-                    : 'bg-white/[0.05] text-t-gray'
+                    : 'bg-slate-100 text-slate-600'
                 }`}>
                   {card.badge}
                 </span>
@@ -150,7 +187,7 @@ export default function PricingSection({ packages = [] }: PricingSectionProps) {
               </div>
 
               {/* Separator */}
-              <div className="h-px bg-white/[0.06] mb-7" />
+              <div className="h-px bg-slate-200 mb-7" />
 
               {/* Özellikler */}
               <ul className="flex flex-col gap-3.5 mb-8 flex-1">
@@ -163,13 +200,17 @@ export default function PricingSection({ packages = [] }: PricingSectionProps) {
               </ul>
 
               {/* Buton */}
-              <button className={`w-full py-3.5 rounded-xl font-body font-semibold text-sm transition-all ${
-                card.featured
-                  ? 'bg-t-accent text-white hover:bg-t-accent-dim'
-                  : 'border border-white/[0.10] text-t-gray hover:border-white/20 hover:text-t-white'
-              }`}>
+              <a
+                href={card.href}
+                onClick={card.onClick}
+                className={`w-full py-3.5 rounded-xl font-body font-semibold text-sm transition-all text-center cursor-pointer ${
+                  card.featured
+                    ? 'bg-t-accent text-white hover:bg-t-accent-dim shadow-[0_4px_16px_rgba(99,102,241,0.3)]'
+                    : 'border border-slate-300 text-slate-700 hover:border-t-accent hover:text-t-accent hover:bg-slate-50'
+                }`}
+              >
                 {card.btn}
-              </button>
+              </a>
             </motion.div>
           ))}
         </div>
@@ -189,7 +230,7 @@ export default function PricingSection({ packages = [] }: PricingSectionProps) {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-white/[0.06]">
+                <tr className="border-b border-slate-200">
                   <th className="py-4 pr-6 font-body font-medium text-xs uppercase tracking-[0.15em] text-t-gray-dim w-1/2">Özellik</th>
                   <th className="py-4 px-3 font-body font-medium text-xs uppercase tracking-[0.15em] text-t-gray-dim text-center">Sporcu / Veli</th>
                   <th className="py-4 px-3 font-body font-medium text-xs uppercase tracking-[0.15em] text-t-accent text-center">Antrenör</th>
@@ -198,7 +239,7 @@ export default function PricingSection({ packages = [] }: PricingSectionProps) {
               </thead>
               <tbody>
                 {comparisonRows.map((row, idx) => (
-                  <tr key={row.label} className={`border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors ${idx === comparisonRows.length - 1 ? 'border-none' : ''}`}>
+                  <tr key={row.label} className={`border-b border-slate-100 hover:bg-slate-50 transition-colors ${idx === comparisonRows.length - 1 ? 'border-none' : ''}`}>
                     <td className="py-4 pr-6">
                       <span className="text-sm font-medium text-t-white block">{row.label}</span>
                       {row.sub && <span className="text-xs text-t-gray-dim mt-0.5 block">{row.sub}</span>}
@@ -208,7 +249,7 @@ export default function PricingSection({ packages = [] }: PricingSectionProps) {
                         ? <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-t-accent/10 text-t-accent font-bold text-xs">✓</span>
                         : row.sporcu === false
                         ? <span className="text-t-gray-dim/40 text-lg">—</span>
-                        : <span className="text-xs font-medium text-t-gray bg-white/[0.05] px-2 py-1 rounded-md whitespace-nowrap">{row.sporcu}</span>
+                        : <span className="text-xs font-medium text-t-gray bg-slate-100 px-2 py-1 rounded-md whitespace-nowrap">{row.sporcu}</span>
                       }
                     </td>
                     <td className="py-4 px-3 text-center bg-t-accent/[0.02]">
@@ -224,7 +265,7 @@ export default function PricingSection({ packages = [] }: PricingSectionProps) {
                         ? <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-t-accent/10 text-t-accent font-bold text-xs">✓</span>
                         : row.kulup === false
                         ? <span className="text-t-gray-dim/40 text-lg">—</span>
-                        : <span className="text-xs font-medium text-t-gray bg-white/[0.05] px-2 py-1 rounded-md whitespace-nowrap">{row.kulup}</span>
+                        : <span className="text-xs font-medium text-t-gray bg-slate-100 px-2 py-1 rounded-md whitespace-nowrap">{row.kulup}</span>
                       }
                     </td>
                   </tr>
@@ -240,7 +281,7 @@ export default function PricingSection({ packages = [] }: PricingSectionProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.7 }}
-          className="bg-t-dark rounded-2xl p-12 md:p-16 flex flex-col md:flex-row items-center justify-between gap-10 border border-white/[0.06]"
+          className="bg-gradient-to-br from-t-accent/5 via-white to-purple-50 rounded-2xl p-12 md:p-16 flex flex-col md:flex-row items-center justify-between gap-10 border border-slate-200 shadow-[0_4px_24px_rgba(15,23,42,0.04)]"
         >
           <div>
             <h3 className="font-headline font-semibold text-t-white text-2xl md:text-3xl leading-tight mb-3">

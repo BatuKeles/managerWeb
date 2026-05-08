@@ -1,5 +1,5 @@
 // ============================================================
-// AcquaManager Demo — Notifications Data
+// Kulüp Bul Demo — Notifications Data
 // ============================================================
 import type { Notification } from '../types'
 

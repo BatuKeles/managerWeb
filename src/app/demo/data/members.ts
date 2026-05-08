@@ -1,5 +1,5 @@
 // ============================================================
-// AcquaManager Demo — Members Data
+// Kulüp Bul Demo — Members Data
 // ============================================================
 import type {
   ClubMember,

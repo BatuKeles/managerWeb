@@ -1,5 +1,5 @@
 // ============================================================
-// AcquaManager Demo — Data Barrel Export
+// Kulüp Bul Demo — Data Barrel Export
 // ============================================================
 export * from './members'
 export * from './sessions'

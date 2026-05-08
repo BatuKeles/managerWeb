@@ -1,5 +1,5 @@
 // ============================================================
-// AcquaManager Demo — Settings Data
+// Kulüp Bul Demo — Settings Data
 // ============================================================
 import type { User, Club } from '../types'
 

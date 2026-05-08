@@ -1,5 +1,5 @@
 // ============================================================
-// AcquaManager Demo — Dashboard Data
+// Kulüp Bul Demo — Dashboard Data
 // ============================================================
 import type { DashboardStats } from '../types'
 import { mockOccurrences } from './sessions'

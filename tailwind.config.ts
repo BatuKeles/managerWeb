@@ -13,20 +13,24 @@ const config = {
     container: { center: true, padding: "2rem", screens: { "2xl": "1400px" } },
     extend: {
       colors: {
-        // Tech dark theme tokens
-        "t-black": "#080810",
-        "t-dark": "#0f0f1a",
-        "t-surface": "#16162a",
-        "t-border": "rgba(255,255,255,0.07)",
-        "t-accent": "#6366f1",
+        // Light theme tokens — names kept for backwards compat, values inverted to light palette
+        "t-black": "#fbfaf7",          // page background (warm cream off-white)
+        "t-dark": "#f1f4f8",           // alternating section background
+        "t-surface": "#ffffff",        // elevated card surface
+        "t-border": "rgba(15,23,42,0.08)",
+        "t-accent": "#6366f1",         // primary indigo (works on both)
         "t-accent-dim": "#4f46e5",
-        "t-white": "#f0f0ff",
-        "t-gray": "#9494b0",
-        "t-gray-dim": "#5a5a7a",
-        "t-light": "#f4f4f8",
-        "t-light-low": "#e8e8f0",
-        "t-on-light": "#12121e",
-        "t-on-light-dim": "#5a5a7a",
+        "t-white": "#0f172a",          // text primary (was bright, now near-black)
+        "t-gray": "#475569",           // text secondary
+        "t-gray-dim": "#94a3b8",       // text muted
+        "t-light": "#f8fafc",          // hero subtle bg
+        "t-light-low": "#eef2f6",      // alt subtle
+        "t-on-light": "#0f172a",
+        "t-on-light-dim": "#475569",
+        // Sport energy palette (additions)
+        "t-energy": "#f97316",         // orange — sports vibe
+        "t-success": "#10b981",
+        "t-warning": "#f59e0b",
         // Kinetic Club design tokens (kept for pricing/admin)
         "kc-primary": "#001e40",
         "kc-primary-container": "#003366",

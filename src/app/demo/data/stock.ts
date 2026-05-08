@@ -1,5 +1,5 @@
 // ============================================================
-// AcquaManager Demo — Stock Data
+// Kulüp Bul Demo — Stock Data
 // ============================================================
 import type { StockItem } from '../types'
 

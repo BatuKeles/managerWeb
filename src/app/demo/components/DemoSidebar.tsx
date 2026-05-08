@@ -62,7 +62,7 @@ export function DemoSidebar({ currentPath }: DemoSidebarProps) {
         </div>
         {!collapsed && (
           <div className="overflow-hidden">
-            <p className="text-sm font-semibold text-white truncate">AcquaManager</p>
+            <p className="text-sm font-semibold text-white truncate">Kulüp Bul</p>
             <p className="text-[11px] text-gray-400 truncate">Demo Yüzme Kulübü</p>
           </div>
         )}

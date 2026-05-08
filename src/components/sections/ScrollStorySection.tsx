@@ -1,6 +1,21 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
+import MascotVideo from '@/components/Mascot/MascotVideo'
+
+interface Stat { value: string; label: string; color: string }
+
+interface ScrollStorySectionProps {
+  stats?: Stat[]
+}
+
+const DEFAULT_STATS: Stat[] = [
+  { value: '12.400+', label: 'Aktif Öğrenci',  color: '#6366f1' },
+  { value: '320+',    label: 'Aktif Kulüp',    color: '#8b5cf6' },
+  { value: '8.900+',  label: 'Aktif Veli',     color: '#10b981' },
+  { value: '1.100+',  label: 'Aktif Antrenör', color: '#f97316' },
+]
 
 /* ── Sayı sayma hook ── */
 function useCountUp(target: number, duration = 1800, start = false) {
@@ -20,20 +35,20 @@ function useCountUp(target: number, duration = 1800, start = false) {
   return value
 }
 
-/* ── Stat kartı ── */
-function StatCard({ value, label, color, started }: { value: string; label: string; color: string; started: boolean }) {
+/* ── Stat kartı (light bg, vibrant numbers) ── */
+function StatCardLight({ value, label, color, started }: { value: string; label: string; color: string; started: boolean }) {
   const numericStr = value.replace(/[^0-9]/g, '')
   const suffix = value.replace(/[0-9]/g, '')
-  const target = parseInt(numericStr, 10)
+  const target = parseInt(numericStr, 10) || 0
   const count = useCountUp(target, 1800, started)
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '0 24px', borderRight: 'inherit' }}>
-      <div style={{ width: 3, height: 44, borderRadius: 2, background: color, flexShrink: 0, boxShadow: `0 0 16px ${color}88` }} />
+      <div style={{ width: 3, height: 44, borderRadius: 2, background: color, flexShrink: 0, boxShadow: `0 0 16px ${color}55` }} />
       <div>
         <div className="font-headline font-bold" style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', lineHeight: 1, letterSpacing: '-0.02em', color }}>
           {started ? `${count.toLocaleString('tr-TR')}${suffix}` : '0'}
         </div>
-        <div style={{ color: '#555', fontSize: 11, fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase', marginTop: 4 }}>
+        <div style={{ color: '#64748b', fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', marginTop: 6 }}>
           {label}
         </div>
       </div>
@@ -41,7 +56,7 @@ function StatCard({ value, label, color, started }: { value: string; label: stri
   )
 }
 
-export default function ScrollStorySection() {
+export default function ScrollStorySection({ stats = DEFAULT_STATS }: ScrollStorySectionProps) {
   const [statsStarted, setStatsStarted] = useState(false)
   const statsRef = useRef<HTMLDivElement>(null)
 
@@ -58,125 +73,159 @@ export default function ScrollStorySection() {
   }, [])
 
   return (
-    <section id="home" style={{ backgroundColor: '#050505' }}>
+    <section id="home" style={{ backgroundColor: '#fbfaf7' }}>
 
       {/* HERO */}
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', position: 'relative', overflow: 'hidden', backgroundColor: '#030303' }}>
-        {/* Video arka plan */}
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          style={{
-            position: 'absolute', inset: 0,
-            width: '100%', height: '100%',
-            objectFit: 'cover',
-            zIndex: 0,
-          }}
-        >
-          <source src="/webKarsilama.mp4" type="video/mp4" />
-        </video>
-        {/* Karartma katmanı */}
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', position: 'relative', overflow: 'hidden', background: 'linear-gradient(180deg, #fefcf9 0%, #fbfaf7 100%)' }}>
+        {/* Stadyum ışığı orb'lar */}
+        <div style={{ position: 'absolute', top: '-15%', right: '-10%', width: 700, height: 700, borderRadius: '50%', background: 'radial-gradient(circle, rgba(99,102,241,0.22) 0%, rgba(99,102,241,0.08) 40%, transparent 70%)', filter: 'blur(60px)', zIndex: 0, pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '-20%', left: '-10%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(249,115,22,0.18) 0%, rgba(249,115,22,0.05) 40%, transparent 70%)', filter: 'blur(60px)', zIndex: 0, pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '40%', left: '30%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(16,185,129,0.12) 0%, transparent 60%)', filter: 'blur(70px)', zIndex: 0, pointerEvents: 'none' }} />
+
+        {/* İnce çizgi grid pattern */}
         <div style={{
-          position: 'absolute', inset: 0, zIndex: 1,
-          background: 'linear-gradient(to right, rgba(3,3,3,0.85) 0%, rgba(3,3,3,0.6) 55%, rgba(3,3,3,0.3) 100%)',
-        }} />
-        <div style={{
-          position: 'absolute', inset: 0, zIndex: 1,
-          background: 'linear-gradient(to bottom, rgba(3,3,3,0.4) 0%, transparent 30%, transparent 70%, rgba(3,3,3,0.6) 100%)',
+          position: 'absolute', inset: 0, zIndex: 0, opacity: 0.4,
+          backgroundImage: 'linear-gradient(rgba(15,23,42,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,0.04) 1px, transparent 1px)',
+          backgroundSize: '64px 64px',
+          maskImage: 'radial-gradient(ellipse at center, black 30%, transparent 75%)',
+          WebkitMaskImage: 'radial-gradient(ellipse at center, black 30%, transparent 75%)',
         }} />
 
-        {/* Metin içeriği */}
+        {/* Metin içeriği + Mascot */}
         <div className="w-full max-w-7xl mx-auto px-6 md:px-12 py-24 md:py-0" style={{ position: 'relative', zIndex: 2 }}>
-          <div style={{ maxWidth: 540 }}>
-            <span style={{
-              color: '#818cf8', fontSize: 11, letterSpacing: '0.32em', fontWeight: 700,
-              textTransform: 'uppercase', display: 'block', marginBottom: 24,
-              animation: 'fadeSlideUp 0.8s ease 0.1s both',
-            }}>
-              Spor Yönetim Platformu
-            </span>
-
-            <div style={{ overflow: 'hidden', marginBottom: 4 }}>
-              <h1 className="font-headline font-black" style={{
-                fontSize: 'clamp(3rem, 7vw, 7rem)', lineHeight: 0.95,
-                letterSpacing: '-0.04em', color: '#f0f0ff',
-                animation: 'heroLineUp 1s cubic-bezier(0.16,1,0.3,1) 0.2s both',
+          <div className="flex items-center justify-between">
+            <div style={{ maxWidth: 540 }}>
+              <span style={{
+                color: '#6366f1', fontSize: 11, letterSpacing: '0.32em', fontWeight: 700,
+                textTransform: 'uppercase', display: 'block', marginBottom: 24,
+                animation: 'fadeSlideUp 0.8s ease 0.1s both',
               }}>
-                Sporu
-              </h1>
-            </div>
-            <div style={{ overflow: 'hidden', marginBottom: 24 }}>
-              <h1 className="font-headline font-black" style={{
-                fontSize: 'clamp(3rem, 7vw, 7rem)', lineHeight: 0.95,
-                letterSpacing: '-0.04em',
-                background: 'linear-gradient(90deg, #818cf8 0%, #c084fc 50%, #f97316 100%)',
-                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-                animation: 'heroLineUp 1s cubic-bezier(0.16,1,0.3,1) 0.35s both',
+                Spor Yönetim Platformu
+              </span>
+
+              <div style={{ overflow: 'hidden', marginBottom: 4 }}>
+                <h1 className="font-headline font-black" style={{
+                  fontSize: 'clamp(3rem, 7vw, 7rem)', lineHeight: 0.95,
+                  letterSpacing: '-0.04em', color: '#0f172a',
+                  animation: 'heroLineUp 1s cubic-bezier(0.16,1,0.3,1) 0.2s both',
+                }}>
+                  Sporu
+                </h1>
+              </div>
+              <div style={{ overflow: 'hidden', marginBottom: 24 }}>
+                <h1 className="font-headline font-black" style={{
+                  fontSize: 'clamp(3rem, 7vw, 7rem)', lineHeight: 0.95,
+                  letterSpacing: '-0.04em',
+                  background: 'linear-gradient(120deg, #6366f1 0%, #8b5cf6 35%, #ec4899 65%, #f97316 100%)',
+                  WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  animation: 'heroLineUp 1s cubic-bezier(0.16,1,0.3,1) 0.35s both, gradientShift 8s ease-in-out infinite',
+                  backgroundSize: '200% 100%',
+                }}>
+                  yeniden tanımla
+                </h1>
+              </div>
+
+              <p style={{
+                color: '#475569', fontSize: '1.05rem', marginBottom: 44,
+                maxWidth: 400, lineHeight: 1.8,
+                animation: 'fadeSlideUp 0.8s ease 0.6s both',
               }}>
-                yeniden tanımla
-              </h1>
+                Kulüpler, antrenörler, veliler ve sporcular için tasarlanmış yeni nesil yönetim platformu.
+              </p>
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', animation: 'fadeSlideUp 0.8s ease 0.75s both' }}>
+                {/* Demo CTA */}
+                <Link href="/demo" style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 10,
+                  background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                  color: '#fff', borderRadius: 14, padding: '14px 24px',
+                  textDecoration: 'none', fontSize: 14, fontWeight: 700,
+                  boxShadow: '0 8px 24px rgba(99,102,241,0.35)',
+                  letterSpacing: '0.02em',
+                }}>
+                  Demoyu Dene
+                  <span style={{ transform: 'translateY(-1px)' }}>→</span>
+                </Link>
+                {/* Pricing scroll */}
+                <a href="#pricing" style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 10,
+                  background: '#ffffff', border: '1px solid #e2e8f0',
+                  color: '#0f172a', borderRadius: 14, padding: '14px 24px',
+                  textDecoration: 'none', fontSize: 14, fontWeight: 600,
+                }}>
+                  Paketleri Gör
+                </a>
+              </div>
             </div>
 
-            <p style={{
-              color: 'rgba(180,180,220,0.7)', fontSize: '1.05rem', marginBottom: 44,
-              maxWidth: 400, lineHeight: 1.8,
-              animation: 'fadeSlideUp 0.8s ease 0.6s both',
-            }}>
-              Kulüpler, antrenörler, veliler ve sporcular için tasarlanmış yeni nesil yönetim platformu.
-            </p>
-            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', animation: 'fadeSlideUp 0.8s ease 0.75s both' }}>
-              {/* App Store */}
-              <a href="#" style={{ display: 'inline-flex', alignItems: 'center', gap: 12, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 14, padding: '10px 20px', textDecoration: 'none', backdropFilter: 'blur(8px)' }}>
-                <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, fill: '#fff', flexShrink: 0 }}>
-                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
-                </svg>
-                <div>
-                  <div style={{ color: 'rgba(255,255,255,0.45)', fontSize: 9, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', lineHeight: 1, marginBottom: 2 }}>App Store</div>
-                  <div style={{ color: '#fff', fontSize: 13, fontWeight: 700, lineHeight: 1 }}>iOS için İndir</div>
-                </div>
-              </a>
-              {/* Google Play */}
-              <a href="#" style={{ display: 'inline-flex', alignItems: 'center', gap: 12, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 14, padding: '10px 20px', textDecoration: 'none', backdropFilter: 'blur(8px)' }}>
-                <svg viewBox="0 0 24 24" style={{ width: 24, height: 24, fill: '#fff', flexShrink: 0 }}>
-                  <path d="M3.18 23.76a2 2 0 0 1-.88-.63 2.49 2.49 0 0 1-.39-1.56V2.43a2.49 2.49 0 0 1 .39-1.56 2 2 0 0 1 .88-.63l11.37 11.76zm14.85-7.71L15.54 14l-2.26 2.34 5 5.1a2.37 2.37 0 0 0 .63-1.39zm-14.85-9.5L15.54 10l2.49-1.36L5.62 2.01a2.37 2.37 0 0 0-.44-.44zm14.85 2.12-2.49 1.36L12.8 12l2.74 2.83 2.49 1.36a2.14 2.14 0 0 0 0-3.45z" />
-                </svg>
-                <div>
-                  <div style={{ color: 'rgba(255,255,255,0.45)', fontSize: 9, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', lineHeight: 1, marginBottom: 2 }}>Google Play</div>
-                  <div style={{ color: '#fff', fontSize: 13, fontWeight: 700, lineHeight: 1 }}>Android için İndir</div>
-                </div>
-              </a>
+            {/* Mascot — hero sağ taraf */}
+            <div className="hidden md:flex items-center justify-center" style={{ animation: 'mascot-float 3s ease-in-out infinite' }}>
+              <MascotVideo
+                src="/videos/mascot/arm_opening_welcome.webm"
+                width={400}
+                height={400}
+              />
             </div>
-
-            <style>{`
-              @keyframes heroLineUp {
-                from { transform: translateY(110%); opacity: 0; }
-                to   { transform: translateY(0);    opacity: 1; }
-              }
-              @keyframes fadeSlideUp {
-                from { opacity: 0; transform: translateY(20px); }
-                to   { opacity: 1; transform: translateY(0); }
-              }
-            `}</style>
           </div>
+
+          <style>{`
+            @keyframes heroLineUp {
+              from { transform: translateY(110%); opacity: 0; }
+              to   { transform: translateY(0);    opacity: 1; }
+            }
+            @keyframes gradientShift {
+              0%, 100% { background-position: 0% 50%; }
+              50%      { background-position: 100% 50%; }
+            }
+            @keyframes fadeSlideUp {
+              from { opacity: 0; transform: translateY(20px); }
+              to   { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes mascot-float {
+              0%, 100% { transform: translateY(0); }
+              50% { transform: translateY(-8px); }
+            }
+            @keyframes mascot-bounce {
+              0%, 100% { transform: translateY(0); }
+              50% { transform: translateY(-6px); }
+            }
+          `}</style>
         </div>
       </div>
 
-      {/* İSTATİSTİKLER — hero'nun altında */}
-      <div ref={statsRef} style={{ backgroundColor: '#07070f', borderTop: '1px solid rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-        <div className="max-w-7xl mx-auto px-6 md:px-12 py-10 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0">
-          {[
-            { value: '12.400+', label: 'Aktif Öğrenci',  color: '#818cf8' },
-            { value: '320+',    label: 'Aktif Kulüp',    color: '#a78bfa' },
-            { value: '8.900+',  label: 'Aktif Veli',     color: '#34d399' },
-            { value: '1.100+',  label: 'Aktif Antrenör', color: '#60a5fa' },
-          ].map((stat, i, arr) => (
-            <div key={stat.label} style={{ borderRight: i < arr.length - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
-              <StatCard value={stat.value} label={stat.label} color={stat.color} started={statsStarted} />
+      {/* İSTATİSTİKLER — light gradient şerit */}
+      <div ref={statsRef} style={{
+        background: 'linear-gradient(135deg, #ffffff 0%, #f5f3ff 50%, #fff7ed 100%)',
+        borderTop: '1px solid rgba(99,102,241,0.12)',
+        borderBottom: '1px solid rgba(99,102,241,0.12)',
+        position: 'relative',
+        overflow: 'hidden',
+      }}>
+        {/* Soft accent orb'lar */}
+        <div style={{ position: 'absolute', top: '-50%', left: '20%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(99,102,241,0.15), transparent 60%)', filter: 'blur(60px)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '-50%', right: '20%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(249,115,22,0.12), transparent 60%)', filter: 'blur(60px)', pointerEvents: 'none' }} />
+
+        <div className="max-w-7xl mx-auto px-6 md:px-12 py-12 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0 relative" style={{ zIndex: 1 }}>
+          {stats.map((stat, i, arr) => (
+            <div key={stat.label} style={{ borderRight: i < arr.length - 1 ? '1px solid rgba(99,102,241,0.10)' : 'none' }}>
+              <StatCardLight value={stat.value} label={stat.label} color={stat.color} started={statsStarted} />
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Scroll hint mascot */}
+      <div style={{ backgroundColor: '#fbfaf7', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 48, paddingBottom: 48 }}>
+        <div style={{ animation: 'mascot-bounce 2s ease-in-out infinite' }}>
+          <MascotVideo
+            src="/videos/mascot/points_down.webm"
+            width={172}
+            height={172}
+          />
+        </div>
+        <p style={{ color: '#64748b', fontSize: 13, marginTop: 8, letterSpacing: '0.05em', fontWeight: 500 }}>
+          Keşfetmek için kaydırın ↓
+        </p>
       </div>
 
     </section>

@@ -14,7 +14,7 @@ const roles = [
     title: 'Kulüpler İçin',
     subtitle: 'Operasyonları Merkezileştirin',
     badge: 'Ücretli',
-    badgeColor: 'bg-white/10 text-white',
+    badgeColor: 'bg-indigo-100 text-indigo-700',
     desc: 'Birden fazla tesisi, yüzlerce sporcuyu ve onlarca antrenörü tek bir platform üzerinden yönetin. Gelir akışlarını anlık takip edin, takvim çakışmalarını otomatik önleyin.',
     features: [
       { icon: '🏢', title: 'Çoklu Tesis Kontrolü', desc: 'Tüm sahalarınızı, salonlarınızı ve ekipmanlarınızı tek panelden yönetin.' },
@@ -138,7 +138,7 @@ function RoleSection({ role }: { role: typeof roles[0] }) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.6, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="bg-white/[0.04] border border-white/8 rounded-2xl p-6 hover:bg-white/[0.07] transition-colors"
+                className="bg-white border border-slate-200 rounded-2xl p-6 hover:bg-slate-50 transition-colors"
               >
                 <div className="text-3xl mb-4">{f.icon}</div>
                 <h4 className="font-headline font-bold text-t-white text-base mb-2">{f.title}</h4>
@@ -199,7 +199,7 @@ export default function OzelliklerClient() {
               <a
                 key={r.id}
                 href={`#${r.id}`}
-                className="flex items-center gap-2 bg-t-dark border border-white/8 text-t-gray text-sm font-body px-5 py-2.5 rounded-full hover:border-t-accent/30 hover:text-t-white transition-all"
+                className="flex items-center gap-2 bg-t-dark border border-slate-200 text-t-gray text-sm font-body px-5 py-2.5 rounded-full hover:border-t-accent/30 hover:text-t-white transition-all"
               >
                 <span>{r.emoji}</span>
                 <span>{r.title}</span>

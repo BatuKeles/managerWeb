@@ -1,7 +1,7 @@
 import OzelliklerClient from './OzelliklerClient'
 
 export const metadata = {
-  title: 'Özellikler | SporKulübü',
+  title: 'Özellikler | Kulüp Bul',
   description: 'Kulüpler, antrenörler, veliler ve sporcular için detaylı özellik anlatımı.',
 }
 
